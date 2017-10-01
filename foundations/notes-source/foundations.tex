@@ -1,0 +1,52 @@
+\documentclass{article}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{tcolorbox}
+\usepackage{listings}
+
+\newcommand{\prob}[2]{\textbf{Problem #1.} \textit{#2}}
+\newcommand{\exec}[2]{\textbf{Exercise #1.} \textit{#2}}
+\newcommand{\remark}{\textit{Remark.} }
+\DeclareMathOperator{\charr}{char}
+\newcommand{\qlim}[2]{\lim_{#1 \rightarrow #2}}
+
+\lstset{language=Pascal} % has pretty much the same syntax highlighting as pseduocode
+
+\title{Foundations}
+\author{Michael Barz}
+
+\begin{document}
+\maketitle
+
+Note: \textbf{$\log$ (or $\lg$) denotes the binary logarithm ($\log_2$), not $\log_{10}$ or $\log_e.$}
+
+\section{Algorithms}
+
+This is an interesting read, but nothing really noteworthy.
+
+\section{Getting Started}
+
+\subsection{Insertion Sort}
+
+	Insertion sort will be our first algorithm, and it will solve the sorting problem:
+\begin{tcolorbox}[title=Sorting Problem]
+	\textbf{Input:} A sequence of $n$ numbers $(a_1, a_2, \dots, a_n).$
+
+	\textbf{Output:} A permutation $(a_1', \dots, a_n')$ of the input sequence such that $a_1' \leq a_2' \leq \dots \leq a_n'.$
+\end{tcolorbox}
+
+\vspace{2mm}
+
+The numbers sorted are called \textit{keys}.
+
+Insertion sort
+
+\begin{lstlisting}[frame=single]
+for j=2 to A.length
+	key = A[j]
+	// Insert A[j] into the sorted sequence A[1..j-1]
+
+\end{lstlisting}
+
+\end{document}
