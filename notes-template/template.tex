@@ -5,18 +5,32 @@
 \usepackage{tcolorbox}
 \usepackage{listings}
 
-\newcommand{\prob}[1]{\textbf{Problem #1.}}
-\newcommand{\exec}[1]{\textbf{Exercise #1.}
+\usepackage{sourcecodepro}
+\usepackage{lmodern}
+\usepackage[T1]{fontenc}
+
+\newcommand{\prob}[2]
+{\textbf{Problem #1.} #2
+
+\textbf{Solution.}}
+\newcommand{\exec}[2]
+{\textbf{Exercise #1.} #2
+
+\textbf{Solution.}}
+\newcommand{\bardiv}{\begin{center}
+\line(1,0){450}
+\end{center}}
 \newcommand{\remark}{\textit{Remark.} }
 \DeclareMathOperator{\charr}{char}
 \newcommand{\qlim}[2]{\lim_{#1 \rightarrow #2}}
 
 \lstset{language=Pascal,% has pretty much the same syntax highlighting as pseduocode
-	numbers=left,
-        stepnumber=1,} 
-
-
-\title{TEMPLATE CHANGE NOW}
+	numbers=left, 
+	numberstyle=\small\ttfamily, 
+	numbersep=8pt, 
+	frame = single,
+	basicstyle=\footnotesize\ttfamily,} 
+\title{Template}
 \author{Michael Barz}
 
 \begin{document}
