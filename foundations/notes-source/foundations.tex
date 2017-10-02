@@ -264,7 +264,61 @@ The best case, when $A[1] = v,$ gives us a constant running time.
 
 The worst case, when $A[n] = v,$ gives us linear running time.
 
-Now, assume that the element occurs $k$ times in the sequence, and that each element is equally likely to be $v.$ If $k = 0,$ we have $T(n) = n.$ Otherwise, we have that
+If the item occurs once in the sequence, then we expect it to be at position $$\frac{1+2+\dots+n}{n} = \frac{n(n+1)/2}{n} = \frac{n+1}{2},$$
+and thus the running time is linear.
 
-$$T(n) = \frac{k}{n} + \frac{2k(n-k)}{n^2} + \dots + \frac{k(n-k)^{n-k}}{n^{n-k+1}}$$
+\subsection{Merge Sort}
+
+Merge sort is a divide and conquer solution to the sorting problem. It has three steps:
+\begin{enumerate}
+	\item Divide the $n$-element sequence into two $n/2$-element sequence.
+	\item Sort the sub-sequences using merge sort.
+	\item Combine the sorted sub-sequences to make a sorted sequences.
+\end{enumerate}
+
+We'll define $\texttt{merge(A, p, q, r)}$ to take a sequence of numbers $A$ such that $A[p..q]$ and $A[q+1..r]$ are sorted, and then merges them to form a single sorted sub-sequence, which will be stored in $A[p..r].$ Our algorithm for $\texttt{merge}$ takes $\Theta(n)$ time, where $n = r-p+1$ is the size of the sub-sequence.
+
+\begin{lstlisting}
+n_1 = q-p+1
+n_2 = r-q
+let L[1..n_1 + 1] and R[1..n_2+1] be new arrays
+
+for i=1 to n_1
+	L[i] = A[i+p-1]
+for i=1 to n_2
+	R[i] = A[i+q]
+L[n_1+1] = \infty
+R[n_2+1] = \infty
+
+i = 1
+j = 1
+for k = p to r
+	if L[i] \leq R[j]
+		A[k] = L[i]
+		i = i+1
+	else
+		A[k] = R[j]
+		j = j+1
+\end{lstlisting}
+
+The proof that this works is kinda boring, so I'll skip it.  
+
+Now, merge sort!
+
+\texttt{merge-sort(A, p, r)} accepts a sequence $A,$ an two indices $p$ and $r,$ and sorts $A[p..r].$
+
+\begin{lstlisting}
+if p < r
+	q = [(p+r)/2]
+	merge-sort(A, p, q)
+	merge-sort(A, q+1, r)
+	merge(A, p, q, r)
+\end{lstlisting}
+
+To sort the entire sequence $A,$ we call \texttt{merge-sort(A, 1, A.length)}.
+
+Also, $[x]$ denotes the floor of $x.$
+
+
+
 \end{document}
