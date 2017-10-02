@@ -5,14 +5,31 @@
 \usepackage{tcolorbox}
 \usepackage{listings}
 
-\newcommand{\prob}[2]{\textbf{Problem #1.} \textit{#2}}
-\newcommand{\exec}[2]{\textbf{Exercise #1.} \textit{#2}}
+\usepackage{sourcecodepro}
+\usepackage{lmodern}
+\usepackage[T1]{fontenc}
+
+\newcommand{\prob}[2]
+{\textbf{Problem #1.} #2
+
+\textbf{Solution.}}
+\newcommand{\exec}[2]
+{\textbf{Exercise #1.} #2
+
+\textbf{Solution.}}
+\newcommand{\bardiv}{\begin{center}
+\line(1,0){450}
+\end{center}}
 \newcommand{\remark}{\textit{Remark.} }
 \DeclareMathOperator{\charr}{char}
 \newcommand{\qlim}[2]{\lim_{#1 \rightarrow #2}}
 
-\lstset{language=Pascal} % has pretty much the same syntax highlighting as pseduocode
-
+\lstset{language=Pascal,% has pretty much the same syntax highlighting as pseduocode
+	numbers=left, 
+	numberstyle=\small\ttfamily, 
+	numbersep=8pt, 
+	frame = single,
+	basicstyle=\footnotesize\ttfamily,} 
 \title{Foundations}
 \author{Michael Barz}
 
@@ -40,13 +57,214 @@ This is an interesting read, but nothing really noteworthy.
 
 The numbers sorted are called \textit{keys}.
 
-Insertion sort
+Insertion sort:
 
-\begin{lstlisting}[frame=single]
+\begin{lstlisting}
 for j=2 to A.length
 	key = A[j]
 	// Insert A[j] into the sorted sequence A[1..j-1]
-
+	i = j-1
+	while i > 0 and A[i] > key
+		A[i+1] = A[i]
+		i = i-1
+	A[i+1] = key
 \end{lstlisting}
 
+Insertion sort works by sorting subsections of the list.
+
+First, it sorts the first 2 elements, then the first 3, \dots
+
+It does this by taking element $j$ of the list. Then, it compares it $A[j-1], A[j-2], \dots$ until it finds an element smaller than $A[j].$ Once it does that, it just puts $A[j]$ in that elements spot. While it's doing this, if an element is larger than $A[j],$ it moves it up one in the list.
+
+\vspace{5mm}
+
+\begin{tcolorbox}[title=Loop Invariant]
+	A \textbf{loop invariant} is something which is true at the start of every iteration of a loop. Formally, it satisfies two properties:
+	\begin{enumerate}
+		\item \textbf{Initalization:} It is true at the start of the loop's first iteration.
+		\item \textbf{Maintenance:} If it is true at the start of an iteration of the loop, it is true at the start of the next iteration.
+	\end{enumerate}
+
+	Informally, it also has a third property: \textbf{termination.} This means that, when the loop terminates, the invariant gives us a useful property which helps prove the algorithm correct.
+\end{tcolorbox}
+
+\subsubsection{Exercises}
+
+\exec{2.1-3}{Consider the \textbf{searching problem:}
+\begin{tcolorbox}[title=Searching Problem]
+	\textbf{Input:} A sequence of $n$ numbers $A = (a_1, \dots, a_n)$ and a value $v.$
+
+	\textbf{Output:} The smallest index $i$ such that $v = A[i]$ or the special value $-1$ if $v$ does not appear in $A.$
+\end{tcolorbox}
+
+Write pseudocode for \textit{linear search,} which scans through the sequence, looking for $v.$ Using a loop invariant, prove that your algorithm is correct.}
+I claim the algorithm
+
+\begin{lstlisting}
+for i=1 to A.length
+	if A[i] == v
+		return i
+return -1
+\end{lstlisting}
+
+Now, we will prove it works by using the following loop invariant: At the start of each iteration, the sub-sequence $(a_1, \dots, a_{i-1})$ will not contain $v.$
+
+To prove that the suggested loop invariant holds, note that at the start of the loops iteration, the sub-sequence described will be the empty sub-sequence, which trivially does not contain $v.$
+
+To prove the claimed invariant has maintanence, note that, if it is true at the start of an iteration, then $(a_1, \dots, a_{i-1})$ will not contain $v.$ If $a_i$ is $v,$ then the algorithm will terminate. However, if the loop runs again, then $a_i \neq v,$ and thus $(a_1, \dots, a_{i-1}, a_i)$ does not contain $v.$
+
+Thus, the loop will either terminate the algorithm by returning the index, or the loop will terminate. If the loop terminates, we will have that $(a_1, \dots, a_n)$ will not contain $v$ (by the invariant, if it got to the iteration where $i=n,$ then $(a_1, \dots, a_{n-1})$ will not contain $v,$ and if the loop went through $i=n$ without returning anything, then we don't have $a_n = v$), and thus we return $-1,$ as desired.
+
+If the loop does terminate, then it returns the smallest $i$ such that $a_i = v.$ To see this, assume that the loop halts at iteration $i$ and returns $i.$ Then, $(a_1, \dots, a_{i-1})$ will not contain $v$ by the loop invariant, and thus there will be no smaller index $k$ such that $a_k = v.$ 
+
+\bardiv
+
+\exec{2.1-4}{Consider the binary addition problem:
+\begin{tcolorbox}[title=Binary Addition Problem]
+	\textbf{Input:} Two $n$-element sequences $A$ and $B.$ Each element of $A$ and $B$ will be either $0$ or $1,$ and $A$ and $B$ will represent two binary integers.
+
+	\textbf{Output:} The sum of the two integers that $A$ and $B$ represent, represented similarly as an $n+1$-element sequence $C.$
+\end{tcolorbox}
+
+Find (with proof) an algorithm which solves this problem.}
+Binary addition is fairly easy, and the only big issue is carrying. In pseduocode, I'm going to assume that $C$ starts out as a sequence of $n+1$ zeroes, as I don't know how I initalize objects with this language.
+
+\begin{lstlisting}
+for i=1 to A.length
+	C[i] = C[i] + A[i] + B[i]
+	if C[i] == 2
+		C[i+1] = 1
+		C[i] = 0
+	if C[i] == 3
+		C[i+1] = 1
+		C[i] = 1
+return C
+\end{lstlisting}
+
+Note: Numbers are backwards--that is, $110$ would be $[0, 1, 1],$ not $[1, 1, 0].$ It's easier for me to implement and prove it works using that, and the only difference is to humans (which you can change by reversing the sequence before outputting/after inputting).
+
+Now, a proof that it works. 
+
+Let $A_{k}$ denote the number represented by the first $k$ digits of $A.$ Similarly define $B_{k}$ and $C_k.$
+
+First, we establish a loop invariant: Before the $i^{\text{th}}$ iteration of this loop, $C$ represents the sum of the numbers represented by the first $i-1$ digits of $A$ and $B.$
+
+For initalization, note that before the first iteration, the first $0$ digits of $A$ and $B$ aren't anything, and thus their sum is $0$--the empty sum--and $C$ represents $0.$
+
+Now, proving maintenance. If the property holds on iteration $i,$ then we will prove it holds on iteration $i+1.$ 
+
+At the start of iteration $i,$ we have that $C_i = A_{i-1} + B_{i-1}.$ Also note that
+
+$$A_i = A_{i-1} + 2^{i-1}A[i],$$
+$$B_i = B_{i-1} + 2^{i-1}B[i].$$
+
+Thus,
+
+\begin{align*}
+	A_i + B_i &= A_{i-1} + B_{i-1} + 2^{i-1}(A[i]+B[i]) \\
+		  &= C_i + 2^{i-1}(A[i]+B[i]) \\
+		  &= C_{i-1} + 2^{i-1}(A[i]+B[i]+C[i]).
+\end{align*}
+
+Now, line 2 will set $C[i]$ to $A[i]+B[i]+C[i].$
+
+If $C[i]$ is $0$ or $1,$ no worries. Then, we just leave $C[i+1]$ as $0,$ and then, as
+
+$$A_i + B_i = C_{i-1} + 2^{i-1}C[i],$$
+
+the value of $C[i]$ is exactly what the $i^{\text{th}}$ digit of the sum $A_i + B_i$ should be. Thus, $C_{i+1}$ equals $A_i + B_i,$ as desired. 
+
+If $C[i] = 2,$ then there's a carry--we have
+
+$$A_i + B_i = C_{i-1} + 2^{i},$$
+
+and thus need to place $10$ in front of $C_{i-1}$'s binary representation (equivalent to adding $0$ and then $1$ to our representation) to get $A_i + B_i.$ This is accomplished by the if statement on line 3.
+
+Similarly, if $C[i] = 3,$ we need to place $11$ in front of $C_{i-1},$ which we do with the if statement on line 6.
+
+As $C[i]$ cannot exceed $3,$ we've covered every case. Thus, maintenance holds.
+
+Anyways, using our loop invariant, at the end of the loop we have that $C$ contains the sum of $A_n + B_n,$ which is what we want.
+
+\subsection{Algorithm Analysis}
+
+Let's look at the insertion sort from before. Except this time, let's analyze how long it takes to run.
+
+By 'cost,' we mean the length of time it takes to execute that line; by 'times,' we mean how many times that line will execute.
+
+There is a while loop in this code--we will denote by $t_j$ the number of times that while loop executes for the given $j$ value. For example, if it executes once for $j=2,$ then we'd say $t_2 = 1.$ (This notation is a little different than the books--specifically, they define $t_j$ to be one more than this, but I prefer it.)
+
+We will also denote by $c_i$ the amount of time it takes for line $i$ to execute.
+
+Now, let's look back at that insertion sort:
+
+\begin{lstlisting}
+for j=2 to A.length             
+	key = A[j]	        
+	// Insert A[j] into the sorted sequence A[1..j-1]
+	i = j-1                 
+	while i > 0 and A[i] > key
+		A[i+1] = A[i]
+		i = i-1
+	A[i+1] = key
+\end{lstlisting}
+
+Line $1$ will run $n$ times--it will run for $2, 3, \dots, n,$ and then run for $n+1,$ at which point it will stop. 
+
+Lines $2$ through $4$ will all run $n-1$ times each--once for each iteration of the loop. Line $8$ will also run $n-1$ times.
+
+Lines $5$ through $7$ are a little trickier. Line $5$ will execute $\sum_{j=2}^n (t_j+1)$ times, and lines $6$ and $7$ will each run $\sum_{j-2}^{n} t_j$ times.
+
+Now, the total time cost, $T(n),$ of our algorithm is:
+
+$$T(n) = nc_1 + (n-1)(c_2 + c_4 + c_8) + (\sum_{j=2}^{n} (t_j+1))c_6 + (\sum_{j=2}^n t_j)(c_5 + c_7).$$
+
+Now, the best possible scenairo for insertion sort happens when the list given to us is already sorted. Here, we have $t_j = 0$ for all relevant $j,$ and thus the running time becomes
+
+\begin{align*}
+T(n) &= nc_1 + (n-1)(c_2 + c_4 + c_8) + (\sum_{j=2}^{n} (1))c_6 + (\sum_{j=2}^n 0)(c_5 + c_7) \\
+     &= n(c_1 + c_2 + c_4 + c_8 + c_6) - (c_2 + c_4 + c_8 + c_6) \\
+     &= an + b,
+\end{align*}
+
+for some constants $a$ and $b.$ Thus, in the best case, $T(n)$ grows linearly.
+
+In the worst case, when the array is in reverse order, we have $t_j = j-1,$ as we need to put the $j^{\text{th}}$ element at the beginning of the list, and we look one at a time. Thus, we have
+
+\begin{align*}
+T(n) &= n(c_1+c_2+c_4+c_8) - (c_2+c_4+c_8) + (n(n+1)/2 - 1)c_6 +(n(n-1)/2)(c_5+c_7) \\
+     &= an^2 + bn + c,
+\end{align*}
+
+for some constants $a, b, c.$ Thus, in the worst case, $T(n)$ grows quadratically.
+
+\subsubsection{Exercises}
+
+\exec{2.2-2}{Consider sorting $n$ numbers stored in array $A$ by first finding the smallest element of $A$ and exchanging it with the element in $A[1].$ Then find the second smallest element and exchange it with $A[2],$ and so on. Write pseudocode for this algorithm, known as a \textit{selection sort.} Give the best and worst case running times (using $\Theta$ notation).}
+First, we describe it's implementation (given some sequence $A$):
+
+\begin{lstlisting}
+for i=1 to A.length-1
+	smallest = i
+	for j=i+1 to A.length
+		if A[j] < A[smallest]
+			smallest = j
+	if smallest != i // don't switch unless we need to
+		temp = A[smallest]
+		A[smallest] = A[i]
+		A[i] = temp
+\end{lstlisting}
+
+Note that, with this implementation, the best and worst case running times are both $\Theta(n^2).$ This is because the only place where we can save time is skipping stuff in that if statement, which can only save linear time, whereas the inner for loop has a quadratic running time.
+
+\bardiv
+
+\exec{2.2-3}{What are the average, best, and worse case running times of the linear search from earlier?}
+The best case, when $A[1] = v,$ gives us a constant running time.
+
+The worst case, when $A[n] = v,$ gives us linear running time.
+
+Now, assume that the element occurs $k$ times in the sequence, and that each element is equally likely to be $v.$ If $k = 0,$ we have $T(n) = n.$ Otherwise, we have that
+
+$$T(n) = \frac{k}{n} + \frac{2k(n-k)}{n^2} + \dots + \frac{k(n-k)^{n-k}}{n^{n-k+1}}$$
 \end{document}
