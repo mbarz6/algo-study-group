@@ -319,6 +319,88 @@ To sort the entire sequence $A,$ we call \texttt{merge-sort(A, 1, A.length)}.
 
 Also, $[x]$ denotes the floor of $x.$
 
+\subsection{Running Time of Merge Sort}
 
+Let's compute $T(n),$ the worst case running time of merge sort on a set of $n$ numbers. Merge sort on $n=1$ takes constant time, otherwise it takes $2T(n/2)$ time to sort the two subsequences, and then some linear amount of time to merge. Thus,
+
+$$T(n) = \begin{cases}
+		c & n=1 \\
+		2T([n/2]) + \Theta(n) & n > 1
+         \end{cases}$$
+
+Rigorously solving this requires actually defining $\Theta$ notation, but intuitively it's $\Theta(n\lg n).$
+
+\subsubsection{Exercises}
+
+\exec{2.3-2}{Rewrite the \texttt{merge} procedure so that it doesn't use infinity.}
+See \texttt{merge\_sort.py}, the python implementation of the algorithm.
+
+\bardiv
+
+\exec{2.3-3}{Use mathematical induction to show that when $n$ is an exact power of $2,$ the solution to the recurrence
+	$$T(n) = \begin{cases} 2 & \text{if }n = 2, \\ 2T(n/2) + n & \text{if }n = 2^k, k>1 \end{cases}$$ is $T(n) = n \lg n.$}
+If $n = 2,$ then $T(n) = 2 = 2\lg 2$ trivially. Now, the inductive step.
+
+Assume that $T(2^k) = k2^k.$ Then,
+
+$$T(2^{k+1}) = 2T(2^k) + 2^{k+1} = 2k2^k + 2(2^k) = 2^k(2k+2) = 2^{k+1}(k+1),$$
+
+as desired.
+\bardiv
+
+\exec{2.3-4}{Recursively, we can define insertion sort to sort $A[1..n]$ by sorting $A[1..n-1]$ and then insert $A[n]$ into the sorted array $A[1..n-1].$ Write a recurrence for the running time of this algorithm.}
+Let $T(n)$ be the running time. Then,
+
+$$T(n) = \begin{cases}
+		c & \text{if }n = 1 \\
+		T(n-1) + \Theta(n) & \text{otherwise}
+	 \end{cases}$$
+where $c$ is some constant.
+\bardiv
+
+\exec{2.3-5}{Consider the searching problem. If $A$ is sorted, we can use tthe binary search algorithm, which checks the midpoint and then halves. Implement it, prove it works, then argue that the worst case running time is $\Theta(\lg n).$}
+I implement the \texttt{binary\_search(A, v, n, m)} function. $A$ is a sequence, $v$ is the value, and $n, m$ are the start and end of the search interval. To search, call \texttt{binary\_search(A, v, 1, A.length)}.
+
+\begin{lstlisting}
+if n > m
+	return -1
+else if A[n] == v
+	return n
+else if n == m
+	return -1
+
+x =  ceil((n+m) / 2)
+
+if A[x] == v
+	return x
+else if A[x] > v
+	return binary_search(A, v, n, x-1)
+else
+	return binary_search(A, v, x+1, m)
+\end{lstlisting}
+
+Now, we will prove it works. To prove it works, note that if it is called, then either $v$ is nowhere in the list, or it is in $A[n..m].$ This can be proven by induction easily. For the base case, when we call it on $n=1$ and $m=A.length-1,$ its trivially true.
+
+Now, assume it was called on $n$ and $m.$ Then, we check the midpoint of the interval. If we don't find it by checking the midpoint $x$, then it's either on $A[n..x-1]$ or $A[x+1..m]$ or not in $A.$ If it's on $A[x] > v,$ then it must be on $A[n..x-1]$ if it's in $A$ by our list. Otherwise, it must be on $A[x+1..m]$ if it's on our list. Thus, at the start of each method call (assuming we started with $n=1$ and $m=A.length-1$) the invariant remains true.
+
+Now, the size of the interval $A[n..m]$ will continually decrease. Eventually, if we have not found $v$ earlier, we will get to an interval containing only one point. In this case, we explicitly check if $A[n] = v,$ and proceed accordingly.
+
+Anyways, now that we know it works, let's find the time complexity.
+
+The method takes some constant time, say $c,$ to run on a single iteration. Say the first 6 lines take $c'$ time to run, where $c'$ is constant. Thus, we have
+
+$$T(n) = \begin{cases} c' & \text{if } $n=1$ \\ T(n/2) + c\end{cases}$$
+
+which is $\Theta(\lg n),$ as it will take $\lg n$ iterations to go stop this recursion, and other then that we only add constants.
+\bardiv
+
+\exec{2.3-7}{Describe a $\Theta(n\lg n)$ algorithm that, given a set $S$ of $n$ integers and another integer $x,$ determines whether or not there exist two elements in $S$ whose sum is exactly $x.$}
+We can do this. Consider the algorithm \texttt{sum(A, x)}
+\begin{enumerate}
+	\item Merge sort the list.
+	\item Iterate over the first $n-1$ elements of $S,$ and binary search to see if $x-i \in S$ for each $i \in S.$ Use binary search for this.
+\end{enumerate}
+
+Merge sort is $\Theta(n\lg n)$ and binary search is $\Theta(\lg n).$ As the binary search will be repeated $n$ times, the overall time complexity is $\Theta(n\lg n)$ for the second step, and thus the total algorithm has a time complexity of $\Theta(n\lg n).$
 
 \end{document}

@@ -32,7 +32,7 @@ Given a sequence, returns the sequence but with sequence[p..q] sorted
 """
 def merge_sort(sequence, p = 0, q = None):
 	if q == None:
-		q = len(sequence)
+		q = len(sequence) - 1
 
 	if p < q:
 		x = int((p+q)/2)

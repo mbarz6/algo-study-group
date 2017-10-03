@@ -1,3 +1,6 @@
+import math             # for ceiling function
+import merge_sort as ms # for an exercise
+
 """
 
 Finds the first occurence of a given value v in a given sequence.
@@ -16,7 +19,7 @@ Given two lists, A and B, which represent binary numbers with the same # of digi
 
 NOTE: Numbers are backwards!
 
-So, 110 would be represented by [0, 1, 1], NOT [1, 1, 0]
+So, 110 would be repres ented by [0, 1, 1], NOT [1, 1, 0]
 If this really annoys you, add some code which reverses inputs, does the algorithm, reverses C, then returns. It's just easier to not do that.
 
 """
@@ -57,3 +60,46 @@ def selection_sort(sequence):
 			sequence[i] = sequence[smallest]
 			sequence[smallest] = temp
 	return sequence
+
+"""
+
+Searches a sorted sequence for an element
+
+"""
+def binary_search(sequence, v, n = 0, m = None):
+	if m == None:
+		m = len(sequence) - 1
+
+	if n > m:
+		return -1
+	elif sequence[n] == v:
+		return n
+	elif n == m:
+		return -1
+
+	x = math.ceil((m+n) / 2)
+
+	if sequence[x] == v:
+		return x
+	elif sequence[x] > v:
+		return binary_search(sequence, v, n, x-1)
+	else:
+		return binary_search(sequence, v, x+1, m)
+
+"""
+
+Given a list of numbers and a number x, it finds if any two numbers in the list sum to x.
+
+"""
+def sum_exists(sequence, x):
+	sequence = ms.merge_sort(sequence)
+	for i in range(0, len(sequence)):
+		complement = binary_search(sequence, x-sequence[i])
+		if complement == i:
+			if i+1 < len(sequence) and sequence[i] == sequence[i+1]:
+				return True
+			else:
+				continue
+		if complement != -1:
+			return True
+	return False
