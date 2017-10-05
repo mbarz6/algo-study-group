@@ -403,4 +403,101 @@ We can do this. Consider the algorithm \texttt{sum(A, x)}
 
 Merge sort is $\Theta(n\lg n)$ and binary search is $\Theta(\lg n).$ As the binary search will be repeated $n$ times, the overall time complexity is $\Theta(n\lg n)$ for the second step, and thus the total algorithm has a time complexity of $\Theta(n\lg n).$
 
+\subsection{Problems}
+
+\prob{2-1}{Although merge sort runs in $\Theta(n \lg n)$ worst-case time and insertion sort in $\Theta(n^2),$ the constant factors in insertion sort makes it faster when you have sufficiently small lists. Consider a modification to merge sort in which $n/k$ sublists of length $k$ are sorted using insertion sort and then merged using the standard merging mechanism, where $k$ is a value to be determined.
+
+\begin{enumerate}
+	\item Show that insertion sort can search all $n/k$ sublists in $\Theta(nk)$ worst-case time.
+	\item Show how to merge the sublists in $\Theta(n \lg(n/k))$ worst-case time.
+	\item Given the modified algorithm runs in $\Theta(nk + n\lg (n/k))$ worst-case time, what is the largest value of $k$ as a function of $n$ for which the modified algorithm has the same running time as standard merge sort, in terms of $\Theta$ notation?
+	\item How do we choose $k$ in practice?
+\end{enumerate}
+}
+For part (a), consider that insertion sort has a worst-case time of $\Theta(k^2)$ for each sublist. Thus, $n/k$ sublists with $\Theta(k^2)$ worst time is a total time of $\Theta(n/k \cdot k^2) = \Theta(nk).$
+
+\bardiv
+
+\prob{2-2}{Bubblesort is a sorting algorithm. It works by repeatedly swapping adajcent elements that are out of order.
+Prove bubblesort is correct. What is the worst case running time?
+}
+The code for bubble sort is included below. 
+
+\begin{lstlisting}
+for i = 1 to A.length - 1
+	for j = A.length downto i+1
+		if A[j] < A[j-1]
+			exchange A[j] with A[j-1]
+\end{lstlisting}
+
+To prove it works, we will first establish some loop invariants. 
+
+Consider that inner for loop. At the start of each iteration, the smallest element of $A[j..A.length]$ will be $A[j].$
+
+At the start of the first iteration, $j=A.length$ so the claim is trivially true.
+
+Now, assume the claim is true at the start of iteration $j.$ Then, if $A[j]$ is smaller than $A[j-1],$ we will swap those elements so now $A[j-1]$ will be the msaller of the two. Note that, by hypothesis, $A[j]$ is the smallest element of $A[j..A.length],$ and thus after that swap (if it happens), $A[j-1]$ will be the smallest element of $A[j-1..A.length],$ as desired.
+
+Thus, after that inner for loop executes, $A[i]$ will be the smallest element of $A[i..A.length].$ 
+
+Now, a loop invariant for the main for loop. Before iteration $i$ of the loop, the smallest $i-1$ elements of $A$ will be those in $A[1..i-1],$ and $A[1..i-1]$ will be in non-decreasing order. For the first iteration, this claim is trivially true as $A[1..0]$ is an empty list.
+
+Now, assume that it's true before iteration $i.$ By hypothesis, we have that $A[i-1] \leq x$ for any $x \in A[i..A.length].$ In particular, $A[i-1] \leq m,$ where $m$ is the minimum element of $A[i..A.length].$
+
+By the inner for loop's invariant, after it terminates, we will have that $A[i]$ is the minimum element of $A[i..A.length].$ Thus, we will have $A[i-1] \leq A[i]$ (as $A[i] = m$ as disucssed above), and so $A[1..i]$ will be in non-creasing order. Similarly, the smallest $i$ elements of $A$ will be those in $A[1..i],$ as desired. Thus, the loop invariant holds.
+
+By this loop invariant, after iteration $A.length - 1$ of the loop, we will have $A[1..A.length-1]$ is sorted and that $A[A.length-1] \leq A[A.length],$ implying that $A$ is sorted. This proves correctness.
+
+Now, to find the worst case running time.
+
+Note that line $1$ takes constant time to run, and it will run $n$ times. 
+
+Line $2$ also takes constant time, and it will run $(n + (n-1) + \dots + 2) = (n(n+1)/2 - 1) = (n^2 + n - 2)/2$ times.
+
+Lines 3 and 4 both take constant time. Line 3 will run $(n^2 + n)/2$ times,, and in the worst case line 4 will also run $(n^2 + n)/2$ times. 
+
+Thus, the total running time will be $\Theta(n^2),$ the same as insertion sort.
+
+\bardiv
+
+\prob{2-3}{Horner's rule is a rule for evaluating a polynomial, which states that
+
+	\begin{align*}
+		P(x) &= \sum_{k = 0}^n a_kx^k \\
+		&= a_0 + x(a_1 + x(a_2 + \dots + x(a_{n-1} xa_n)\dots)).
+	\end{align*}
+Using $\Theta$ notation, find the running time of using Horner's rule to evaluate a polynomial. Compare this to the naive algorithm which computes $a_0 + a_1x + \dots + a_nx^n$ by finding each term from scratch.
+}
+We can implement Horner's rule like so:
+
+\begin{lstlisting}
+y = 0
+for i = n downto 0
+	y = a_i + xy
+\end{lstlisting}
+
+To find it's running time, note that line 1 takes constant time and runs once. Line 2 will run $n+2$ times (and takes constant time) and line 3 will run $n+1$ times (also taking constant time). Thus, the algorithm is $\Theta(n).$
+
+For the naive algorithm, that depends on how exponentiation is implemented. If it's implemented as an algorithm in terms of multiplication with $\Theta(n)$ complexity, then the naive algorithm is $\Theta(n^2).$ If exponentiation can be done in constant time for arbitrary numbers, then its still $\Theta(n)$ (although this is very unlikely).
+
+\bardiv
+
+\prob{2-4}{Let $A[1..n]$ be an array of $n$ distinct numbers. If $i < j$ and $A[i] > A[j],$ then the pair $(i, j)$ is called an inversion of $A.$
+
+	What array whose elements are from the set $\{1, 2, \dots, n\}$ has the most inversions, and how many does it have?
+
+What is the relationship between the running time of insertion sort and the number of inversions in the input sequence?
+
+Give an algorithm that determines the number of inversions in any permutation on $n$ elements in $\Theta(n \lg n)$ worst-case time.}
+
+The array $(n, n-1, n-2, \dots, 1)$ has the most inversions of any permutation, with a whopping $\binom{n}{2}$ inversions (given any $0 < i < j < n+1,$ we have that $(i, j)$ is an inversion). To prove this, we use induction on $n.$ For $n=1,$ this is trivial.
+
+Now, suppose that $(k, k-1, \dots, 1)$ is the permutation with the most inversions of any permutation of $\{1, \dots, k\}.$ Then, consider a permutation of $\{1, \dots, k+1\}.$ 
+
+Suppose some permutation of $\{1, \dots, k+1\}$ had more inversions than $(k+1, \dots, 1).$ Suppose $P$ was our permutation, and that $k+1$ was placed at index $i.$ If $i=1,$ the the number of inversions is $k$ plus the number of inversions of $A[2..k+1],$ which (by induction) is maximixed when $A[2..k+1] = (k, k-1, \dots, 1).$
+
+Now, suppose that $i > 1.$ Then, $A[1] < A[i],$ so that can't be an inversion. But every possible $(i, j)$ pair (with $0 < i < j < k+1$) was an inversion in $(k+1, \dots, 1)$ so this permutation can't possibly have more inversions, since we've found one pair that isn't an inversion.
+
+
+
 \end{document}

@@ -103,3 +103,17 @@ def sum_exists(sequence, x):
 		if complement != -1:
 			return True
 	return False
+
+"""
+
+Sorts stuff.
+
+"""
+def bubblesort(sequence):
+	for i in range(0, len(sequence) - 1):
+		for j in range(len(sequence) - 1, i, -1):
+			if sequence[j] < sequence[j-1]:
+				temp = sequence[j]
+				sequence[j] = sequence[j-1]
+				sequence[j-1] = temp
+	return sequence
