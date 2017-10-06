@@ -504,4 +504,171 @@ Now, suppose that $i > 1.$ Then, $A[1] < A[i],$ so that can't be an inversion. B
 
 
 
+
+\section{Growth of Functions}
+
+We can compute the exact running time of an algorithm as a function of the input size, but that's usually not worth the effort. Instead, we study the \textit{asymptopic} efficiency of algorithms. That is, we are concerned with how the running time of an algorithm increases as the size of the input increases without beyond.
+
+\subsection{Asymptotic Notation}
+
+Wheenver we define a function representing the running time of an algorithm, we assume it is a function whose domain is $\mathbb{N}$ (like any sensible person would, this book defines $0$ to be a natural number). Sometimes we abuse notation and extend it to real numbers or restrict it to a subset of the naturals.
+
+\subsubsection{$\Theta$-notation}
+
+\begin{tcolorbox}[title=$\Theta$-notation]
+	Given a function $g(n),$ we define
+	\begin{multline*}
+		\Theta(g(n)) = \{ f(n) : \text{there exists } c_1, c_2, n_0 > 0 \\ \text{such that }0 \leq c_1g(n) \leq f(n) \leq c_2g(n) \text{for all } n \geq n_0) \}.
+	\end{multline*}
+
+	If $f(n) \in \Theta(g(n)),$ we say that $g$ is an \textit{asymptotically tight bound} for $f.$
+\end{tcolorbox}
+
+\vspace{2mm}
+
+The above definition just means that $\Theta(g(n))$ is just the set of all functions that grow at the same rate (up to some constant factor) as $g(n)$ for sufficiently large $n.$ The condition that $f(n) \leq c_2g(n)$ is fairly obvious, as if it could get bigger than $c_2g(n)$ for all $c_2$ it would definitely grow faster; the $c_1g(n) \leq f(n)$ is so it isn't slower than $g(n).$
+
+The definition requires that $f$ be \textit{asymptotically nonnegative,} which means that $f$ is nonnegative for sufficiently large $n.$ In order for $\Theta(g(n)) \neq \emptyset,$ we must have that $g$ be asymptotically nonnegative as well. 
+
+Instead of writing $f(n) \in \Theta(g(n)),$ we usually write $f(n) = \Theta(g(n)).$ 
+
+\subsubsection{$O$-notation}
+
+$\Theta$-notation asymptotically bounds a function from above and below. $O$-notation only bounds it from above. 
+
+\begin{tcolorbox}[title=$O$-notation]
+	Let $g(n)$ be a function. Then we define
+	\begin{multline*}
+	O(g(n)) = \{ f(n) : \text{there exists } c, n_0 > 0 \\ \text{such that } 0 \leq f(n) \leq cg(n) \text{ for all } n \geq n_0 \}.
+	\end{multline*}
+\end{tcolorbox}
+
+\subsubsection{$\Omega$-notation}
+
+$\Omega$-notation gibes us asymptotic lower bounds.
+
+\begin{tcolorbox}[title=$\omega$-notation]
+	Let $g(n)$ be a function. Then we define
+	\begin{multline*}
+	\Omega(g(n)) = \{ f(n) : \text{there exists } c, n_0 > 0 \\ \text{such that } 0 \leq cg(n) \leq g(n) \text{ for all } n \geq n_0 \}.
+	\end{multline*}
+\end{tcolorbox}
+
+\vspace{2mm}
+
+When we say that the running time of an algorithm is $\Omega(g(n)),$ we mean that \textit{no matter what particular input of size $n$ is chosen,} the running time on that input is at least a constant times $g(n)$ (for sufficiently large $n$). 
+
+\subsubsection{Notes on Notation}
+
+Now that these notations are all defined, we can state and prove the following simple theorem:
+
+\begin{tcolorbox}[title=Theorem 3.1]
+For any two functions $f(n)$ and $g(n),$ we have $f(n) = \Theta(g(n))$ if and only if $f(n) = O(g(n))$ and $f(n) = \omega(g(n)).$
+\end{tcolorbox}
+
+\vspace{2mm}
+
+This proof is trivial; just look back at the definitions.
+
+This theorem is mainly useful for proving that $f(n) = \Theta(g(n))$ by first proving an upper and lower bound for $f.$
+
+\vspace{5mm}
+
+There's one more important thing to mention: Sometimes, we use $\Theta(g(n))$ to represent a function $f(n) \in \Theta(g(n))$ that we don't want to write out. For example, we may write
+
+$$2n^2 + 3n + 1 = 2n^2 + \Theta(n).$$
+
+This can help eliminate clutter in our algebra; for example, in chapter 2 we found that merge sort had worst-case running time
+
+$$T(n) = 2T(n/2) + \Theta(n).$$
+
+As we are only interested in the asymptotic behaviour of $T(n),$ there is no point in specifying exactly which function in $\Theta(n)$ we're referring to.
+
+Sometimes, we have equations like
+
+$$2n^2 + \Theta(n) = \Theta(n^2),$$
+
+where $\Theta$-notation appears on both sides. Here, we just mean that no matter which function in $\Theta(n)$ we choose to substitute in on the left hand side, the left hand side will be a member of $\Theta(n^2).$
+
+This let's us chain things; for example,
+
+$$an^2 + bn + c = an^2 + \Theta(n) = \Theta(n^2).$$
+
+\subsubsection{$o$-notation}
+
+The asymptotic upper bound provided by $O$-notation may or may not be asymptotically tight; we use $o$-notation to say that it's not tight.
+
+Formally, we have
+
+\begin{tcolorbox}[title=$o$-notation]
+	Let $g(n)$ be a function. Then we define
+	\begin{multline*}
+		o(g(n)) = \{ f(n) : \text{for all } c > 0 \text{ there exists a constant } n_0 > 0 \\ \text{such that } 0 \leq f(n) < cg(n) \text{ for all } n \geq n_0 \}.
+	\end{multline*}
+\end{tcolorbox}
+
+\vspace{5mm}
+
+For example, $2n = o(n^2)$ but $n^2 \neq o(n^2).$
+
+$f(n) = o(g(n))$ is equivalent to stating that
+
+$$\qlim{n}{\infty} \frac{f(n)}{g(n)} = 0.$$
+
+\subsubsection{$\omega$-notation}
+
+Similarly, $\omega$-notation is to $\Omega$-notation as $o$-notation is to $O$-notation. 
+
+Formally,
+
+\begin{tcolorbox}[title=$o$-notation]
+	Let $g(n)$ be a function. Then we define
+	\begin{multline*}
+		\omega(g(n)) = \{ f(n) : \text{for all } c > 0 \text{ there exists a constant } n_0 > 0 \\ \text{such that } 0 \leq cg(n) < f(n) \text{ for all } n \geq n_0 \}.
+	\end{multline*}
+\end{tcolorbox}
+
+\vspace{5mm}
+
+For example, $n^2 = \omega(n)$ but $n^2 \neq \omega(n^2).$
+
+\subsubsection{Exercises}
+
+\exec{3.1-1}{Let $f(n)$ and $g(n)$ be asymptotically nonnegative functions. Prove that $$\max\{ f(n), g(n) \} = \Theta(f(n) + g(n)).$$}
+As $f$ and $g$ are asymptotically nonnegative, let $n_1$ be some positive constant such that $$n \geq n_1 \implies f(n), g(n) \geq 0.$$
+
+Let $h(n) = \max\{f(n), g(n)\} = f(n) + g(n) - |f(n) - g(n)|.$
+
+Now, we wish to prove that there exists some positive constants $c$ and $n_0$ such that $0 \leq h(n) \leq cf(n) + cg(n)$ for all $n \geq n_0.$
+
+Note that
+
+$$h(n) = f(n) + g(n) - |f(n) - g(n)| \leq f(n) + g(n) - 0 = f(n) + g(n).$$
+
+Now, all that's left to do is find some $n_0$ such that $n \geq n_0$ implies $0 \leq h(n).$
+
+Note that, by the triangle inequality,
+
+$$|f(n) - g(n)| \leq |f(n)| + |g(n)|.$$
+
+Recall that, when $n \geq n_1,$ we have that $|f(n)| = f(n)$ and $|g(n)| = g(n)|.$ Thus,
+
+\begin{align*}
+	n \geq n_1 \implies |f(n) - g(n)| &\leq |f(n)| + |g(n)| \\
+					  &= f(n) + g(n).
+\end{align*}
+
+Thus, 
+
+$$n \geq n_1 \implies f(n) + g(n) - |f(n) - g(n)| \geq 0,$$
+
+and thus
+
+$$0 \leq h(n) \leq f(n) + g(n)$$ 
+
+for all $n \geq n_1.$ Thus, $c=1$ and $n_0 = n_1$ work, and $h(n) = \Theta(f(n) + g(n)).$
+
+\bardiv
+
+
 \end{document}
