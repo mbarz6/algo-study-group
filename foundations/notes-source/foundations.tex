@@ -670,5 +670,162 @@ for all $n \geq n_1.$ Thus, $c=1$ and $n_0 = n_1$ work, and $h(n) = \Theta(f(n) 
 
 \bardiv
 
+\exec{3.1-2}{Show that, for any real constants $a$ and $b$ with $b > 0,$ we have that $$(n+a)^b = \Theta(n^b).$$}
+First, we show that
+
+$$n+a \leq |a|n$$
+
+when $n > |a|.$ To see this, simply note that
+
+$$n+a \leq n + |a| < 2n.$$
+
+As $x \mapsto x^b$ is montonically increasing for positive inputs, we have that
+
+$$(n+a)^b < (2n)^b = 2^b n^b.$$
+
+Thus, $$(n+a)^b = O(n^b)$$
+
+by definition (for the positive part of the definition, simply note that when $n+a$ is positive, $(n+a)^b$ is positive too).
+
+Now, we will prove that $(n+a)^b = \Omega(n^b).$
+
+To see this, note that whenever $n > |a|,$ we have
+
+$$0 \leq n \leq n+a,$$
+
+and thus
+
+$$0 \leq n^b \leq (n+a)^b,$$
+
+as desired.
+
+Thus, by theorem 3.1, we have $(n+a)^b = \Theta(n^b).$
+
+\bardiv
+
+\exec{3.1-4}{Is $2^{n+1} = O(2^n)$? How about $2^{2n}$?}
+$2^{n+1} = 2\cdot2^{n}$ is trivially $O(2^n),$ so let's consider $2^{2n}.$
+
+I claim the answer is no. To see this, assume there were some constants $n_0$ and $c > 0$ such that, for all $n > n_0$ we have
+
+$$2^{2n} \leq c2^{n}.$$
+
+Note that, as $2^n > 0$ for all $n,$ we have
+
+$$2^n \leq c$$
+
+for all $n > n_0.$ However, this statement is trivially false as $c$ is a constant and $2^n \rightarrow \infty$ as $n \rightarrow\infty.$ Thus, $2^{2n}$ is not $O(2^n).$
+
+\subsection{Stardard Notations and Common Functions}
+
+\subsubsection{Logarithms}
+
+We use $\lg^k n = (lg n)^k$ (not composition as it is sometimes defined) and $\lg \lg n = \lg(\lg n).$
+
+An important notational convention the book uses is that $\lg n + k$ should be interpreted as $\lg(n) + k,$ not $\lg(n+k).$
+
+We will say that a function $f(n)$ is \textit{polylogarithmically bounded} if $f(n) = O(\lg^k n)$ for some constant $k.$
+
+Finally, something math-y. For $x > -1,$ we have
+
+$$\frac{x}{1+x} \leq \ln(1 + x) \leq x,$$
+
+with equality holding if and only if $x = 0.$ 
+
+\subsubsection{Factorials}
+
+Factorials are defined as expected, and we have the (very) weak inequality $n! \leq n^n.$ \textit{Stirling's approximation} is
+
+$$n! = \sqrt{2\pi n}\left(\frac{n}{e}\right)^n \left(1+\Theta\left( \frac{1}{n}\right)\right),$$
+
+where $e$ is the base of the natural logarithm. This gives us a tighter bound on the factorial.
+
+\subsubsection{Functional Iteration}
+
+We will use $f^{(i)}(n)$ to denote $f$ applied iteratively $i$ times.
+
+The function $\lg^* n,$ the iterated logarithm, is defined as
+
+$$\lg* n = \min\{i \geq 0 : \lg^{(i)} n \leq 1\}.$$
+
+The iterated logarithm grows \textit{very} slowly. We very rarely encounter $n$ such that $\lg* n > 5.$
+
+\subsubsection{Exercises}
+
+\exec{3.2-1}{Show that if $f$ and $g$ are montonically increasing functions, then so are $f+g$ and $f\circ g.$ Also show that, if $f$ and $g$ are montonically increasing and nonnegative, then $f\cdot g$ is montonically increasing.}
+
+First, note that we have, for all $n < m,$
+
+$$f(n) < f(m), g(n) < g(m).$$
+
+Thus,
+
+$$f(n) + g(n) < f(m) + g(m),$$
+as desired.
+
+For composition, note that
+
+$$g(n) < g(m),$$
+
+and thus
+
+$$f(g(n)) < f(g(m))$$
+
+when $n < m.$ 
+
+Now, if we assume that $f(n), g(n) \geq 0$ and let $n < m,$ then
+
+$$f(n) < f(m),$$
+$$f(n)g(n) < f(m)g(n) < f(m)g(m).$$
+
+Note that we implicitly use $f(m) \geq 0$ when we say $f(m)g(n) < f(m)g(m).$
+
+\bardiv
+
+\exec{3.2-2}{Prove $a^{\log_b c} = c^{\log_b a}.$}
+
+Simply note that
+
+$$a^{\log_b c} = (b^{\log_b a})^{\log_b c} = (b^{\log_b c})^{\log_b a} = c^{\log_b a}.$$
+
+\bardiv
+
+\exec{3.2-3}{Prove that $n! = o(n^n), n! = \omega(2^n),$ and that $\lg(n!) = \Theta(n \lg n).$}
+
+First, we prove that $n! = o(n^n).$ Given some positive constant $c > 0,$ note that if $n > \frac{1}{|1-c|},$ then we have
+
+\begin{align*}
+\frac{1}{|1-c|} > n &\implies |1-c| < \frac{1}{n} \\
+		    &\implies 1-c < \frac{1}{n} \\
+		    &\implies c > \frac{n-1}{n} \\
+		    &\implies \frac{n-1}{c} < n \\
+		    &\implies \frac{n-1}{c} \cdot (n-2)! < n(n-2)! < n^{n-1} \\
+		    &\implies \frac{1}{c} \cdot (n-1)! < n^{n-1} \\
+		    &\implies n! < cn^n,
+\end{align*}
+
+and thus given any constant $c > 0$ we can find some $n_0$ such that $n > n_0 \implies n! < cn^n,$ as desired.
+
+Now, to prove that $n! = \omega(2^n).$ Just let $n > \min\{2, 2c\}$ to get that
+
+$$c\cdot 2^n = (2c)2^{n-1} < n2^{n-1} < 2^n < n!$$
+
+as $n > 2.$
+
+Now, for the hard one! We wish to show that $\lg(n!) = \Theta(n\lg n).$
+
+Note that, by Stirling's approximation, there exists some constants $c_1$ and $c_2$ such that
+
+$$\sqrt{2\pi n}\left(\frac{n}{e}\right)^n \left(1+\frac{c_1}{n}\right) \leq n! \leq \sqrt{2\pi n}\left(\frac{n}{e}\right)^n \left(1+\frac{c_2}{n}\right)$$
+
+for all $n > n_0$ for some constant $n_0.$
+
+TODO: finish this
+
+\bardiv
+
+\exec{3.2-4}{Is $\lceil \lg n\rceil !$ polynomially bounded? How about $\lceil \lg \lg n\rceil !?$}
+
+
 
 \end{document}

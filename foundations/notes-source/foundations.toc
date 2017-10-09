@@ -17,3 +17,8 @@
 \contentsline {subsubsection}{\numberline {3.1.5}$o$-notation}{15}{subsubsection.3.1.5}
 \contentsline {subsubsection}{\numberline {3.1.6}$\omega $-notation}{16}{subsubsection.3.1.6}
 \contentsline {subsubsection}{\numberline {3.1.7}Exercises}{16}{subsubsection.3.1.7}
+\contentsline {subsection}{\numberline {3.2}Stardard Notations and Common Functions}{18}{subsection.3.2}
+\contentsline {subsubsection}{\numberline {3.2.1}Logarithms}{18}{subsubsection.3.2.1}
+\contentsline {subsubsection}{\numberline {3.2.2}Factorials}{18}{subsubsection.3.2.2}
+\contentsline {subsubsection}{\numberline {3.2.3}Functional Iteration}{18}{subsubsection.3.2.3}
+\contentsline {subsubsection}{\numberline {3.2.4}Exercises}{19}{subsubsection.3.2.4}
