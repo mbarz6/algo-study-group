@@ -825,7 +825,54 @@ TODO: finish this
 \bardiv
 
 \exec{3.2-4}{Is $\lceil \lg n\rceil !$ polynomially bounded? How about $\lceil \lg \lg n\rceil !?$}
+$\lceil \lg n\rceil !$ is not polynomially bounded. To see this, note that, by Stirling's approximation, we have that
 
+$$\lceil \lg n\rceil ! = \sqrt{2\pi \lceil \lg n\rceil} \left(\frac{\lceil \lg n\rceil}{e}\right)^{\lceil \lg n\rceil}\left(1+\Theta\left(\frac{1}{\lceil \lg n\rceil}\right)\right) = \Theta((\lceil \lg n \rceil)^{\lceil \lg n\rceil}).$$
 
+Now, assume that $\lceil \lg n\rceil^{\lceil \lg n\rceil}$ was polynomially bounded. Then, there are some positive constants $m, c$ such that 
+
+$\lceil \lg n\rceil^{\lceil \lg n\rceil} < cn^m$
+
+for all $n > n_0.$
+
+Note that $$(\lg n)^{\lg n} \leq \lceil \lg n\rceil^{\lceil \lg n\rceil} < cn^m.$$
+
+Assume that
+
+$$(\lg n)^{\lg n} < cn^m.$$
+
+Then, 
+
+$$(\lg n)(\lg \lg n) < (m \lg n) + (m \lg c).$$
+
+Let $n$ be such that $\lg \lg n > m + (m\lg c)/(\lg n).$ Then,
+
+$$(\lg n)(m + (m\lg c)/(\lg n)) = m\lg n + m \lg c < (m\lg n) + (m\lg c),$$
+
+a clear contradiction.
+
+$\lceil \lg \lg n\rceil!$ is, however, polynomially bounded. By Stirling's approximation, we have
+
+$$\lceil \lg \lg n\rceil! = \sqrt{2\pi \lceil \lg \lg n\rceil} \left(\frac{\lceil \lg \lg n\rceil}{e}\right)^{\lceil \lg \lg n\rceil}\left(1+\Theta\left(\frac{1}{\lceil \lg \lg n\rceil}\right)\right) = \Theta((\lceil \lg\lg n \rceil)^{\lceil \lg \lg n\rceil}).$$
+
+I claim that
+
+$$(\lceil \lg\lg n\rceil)^{\lceil \lg\lg n\rceil} < n$$
+
+for all $n > 1.$ To see this, let $m > 1$ and suppose that 
+
+$$(\lceil \lg\lg m\rceil)^{\lceil \lg\lg m\rceil} \geq m.$$
+
+Then,
+
+$$(1 + \lg\lg m)^{1 + \lg\lg m} \geq m.$$
+
+Taking the logarithm of both sides, we have that
+
+$$(1+\lg\lg m)(\lg(1+\lg\lg m)) \geq \lg m.$$
+
+Note that the LHS grows slower than the RHS, and this isn't true for $m=1,$ and thus it cannot be true for $m > 1.$
+
+\bardiv
 
 \end{document}
